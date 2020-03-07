@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type Users struct {
+type User struct {
 
 	// 用户唯一标识（感觉作用不大，用wx_code说不定更好）
 	ID string `json:"id"`

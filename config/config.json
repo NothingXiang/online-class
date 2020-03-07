@@ -1,4 +1,6 @@
 {
+  "gin.mode": "debug",
+  "http.port": 8080,
   "appid": "wxc4f8fb68b68c50c7",
   "app.secret": "qazwsxedcrfv"
 }

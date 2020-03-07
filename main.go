@@ -1,11 +1,15 @@
+/*
+程序入口main
+*/
 package main
 
 import (
 	"log"
 	"time"
 
-	"online-class/common/pkg"
-	"online-class/config"
+	"github.com/NothingXiang/online-class/api"
+	"github.com/NothingXiang/online-class/common/pkg"
+	"github.com/NothingXiang/online-class/config"
 )
 
 var PkgInfo = pkg.Info{
@@ -15,6 +19,12 @@ var PkgInfo = pkg.Info{
 }
 
 func main() {
+
+	// 1. load common line args
+	// todo:may be can update to cobra
+	//flag.Parse()
+
+	//2. recover
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println(PkgInfo.AppName, "Process Stop : ", r)
@@ -23,5 +33,10 @@ func main() {
 		}
 	}()
 
+	// 3. load config
 	config.Init()
+
+	// 4. set routers
+	api.Serve(PkgInfo)
+
 }
