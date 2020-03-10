@@ -1,6 +1,19 @@
 {
   "gin.mode": "debug",
   "http.port": 8080,
-  "appid": "wxc4f8fb68b68c50c7",
-  "app.secret": "qazwsxedcrfv"
+  "app.id": "wxc4f8fb68b68c50c7",
+  "app.secret": "qazwsxedcrfv",
+  "mgo": {
+    "url": "localhost:27017/online-class",
+    "host": "localhost",
+    "port": 27017,
+    "db": "online-class",
+    "user": "",
+    "pwd": ""
+  },
+  "redis": {
+    "addr": "localhost:6379",
+    "pwd": "",
+    "db": 0
+  }
 }

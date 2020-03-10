@@ -12,13 +12,19 @@ func NewAPIResp(data interface{}, err *APIError) *APIResp {
 }
 
 // 用于返回只带有错误信息的resp
-func NewErrResp(err *APIError) *APIResp {
-	return &APIResp{Code: err.Code, Msg: err.Message}
+func ErrResp(err error) *APIResp {
+	switch err := err.(type) {
+	case *APIError:
+		return &APIResp{Code: err.Code, Msg: err.Error()}
+	default:
+		return ErrResp(UnknownError.SetMsg(err))
+	}
+
 }
 
 // 返回带有正确处理结果的resp
 func NewSucResp(data interface{}) *APIResp {
-	return NewAPIResp(data, Success)
+	return NewAPIResp(data, NoError)
 }
 
 func (a *APIResp) SetData(data interface{}) *APIResp {
