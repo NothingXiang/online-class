@@ -1,5 +1,9 @@
 package resp
 
+import (
+	"fmt"
+)
+
 type APIResp struct {
 	Code int         `json:"code"`
 	Msg  string      `json:"msg"`
@@ -29,5 +33,10 @@ func NewSucResp(data interface{}) *APIResp {
 
 func (a *APIResp) SetData(data interface{}) *APIResp {
 	a.Data = data
+	return a
+}
+
+func (a *APIResp) SetMessage(err error) *APIResp {
+	a.Msg = fmt.Sprintf("%v:%v", a.Msg, err.Error())
 	return a
 }

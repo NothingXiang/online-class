@@ -10,5 +10,6 @@ require (
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/viper v1.6.1
+	golang.org/x/image v0.0.0-20200119044424-58c23975cae1
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )

@@ -7,12 +7,14 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/NothingXiang/online-class/api/user"
 	"github.com/NothingXiang/online-class/common/pkg"
 	"github.com/spf13/viper"
 
 	"github.com/gin-gonic/gin"
 )
 
+// 网络服务
 func Serve(info pkg.Info) {
 
 	gin.SetMode(viper.GetString("gin.mode"))
@@ -23,6 +25,8 @@ func Serve(info pkg.Info) {
 	engine.GET("/version", func(c *gin.Context) {
 		c.JSON(http.StatusOK, info)
 	})
+
+	user.RegisterRoutes(engine)
 
 	port := viper.GetString("http.port")
 	if err := engine.Run(":" + port); err != nil {
