@@ -19,7 +19,7 @@ func (u *UserServiceImpl) CheckUserIdAndPwd(id, pwd string) error {
 
 	user, e := u.Store.FindUserByIdandPwd(id, pwd)
 	if e != nil {
-		return resp.UnknownError.SetMsg(e)
+		return resp.UnknownError.NewErr(e)
 	}
 	if user == nil {
 		return resp.NotExistError
@@ -32,7 +32,7 @@ func (u *UserServiceImpl) LoginByPwd(phone string, pwd string) (*user.User, erro
 	user, err := u.Store.FindUserByPwd(phone, pwd)
 
 	if err != nil {
-		return nil, resp.NotExistError.SetMsg(err)
+		return nil, resp.NotExistError.NewErr(err)
 	}
 
 	return user, nil
@@ -47,7 +47,7 @@ func (u *UserServiceImpl) Create(user *user.User) error {
 	// check phone repeat
 
 	if u.Store.IsPhoneRepect(user.Phone) {
-		return resp.RepeatError.SetMsg(errors.New("phone number:" + user.Phone))
+		return resp.RepeatError.NewErr(errors.New("phone number:" + user.Phone))
 	}
 
 	// 生成新的uuid
@@ -56,7 +56,7 @@ func (u *UserServiceImpl) Create(user *user.User) error {
 	user.CreateTime = time.Now()
 
 	if err := u.Store.CreateUser(user); err != nil {
-		return fmt.Errorf("[CreateUserByPwd] failed:%w", err)
+		return fmt.Errorf("[CreateUserByPhonePwd] failed:%w", err)
 	}
 
 	return nil

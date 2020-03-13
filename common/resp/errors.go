@@ -1,34 +1,39 @@
 package resp
 
 import (
-	"github.com/NothingXiang/online-class/common/utils"
+	"fmt"
 )
 
 type APIError struct {
-	Code    int
-	Key     string
-	Message string
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
 }
 
 func (A *APIError) Error() string {
-	if utils.IsEmptyString(A.Message) {
-		return A.Key
-	}
-	return A.Key + ":" + A.Message
+
+	return A.Msg
 }
 
-func newAPIError(code int, key string) *APIError {
-	return &APIError{Code: code, Key: key}
+func newAPIError(code int, msg string) *APIError {
+	return &APIError{Code: code, Msg: msg}
 }
 
 func (A *APIError) String() string {
-	if utils.IsEmptyString(A.Message) {
-		return A.Key
-	}
-	return A.Key + ":" + A.Message
+	return A.Msg
 }
 
-func (A *APIError) SetMsg(err error) *APIError {
-	A.Message = err.Error()
-	return A
+// 在原来的基础上生成新的error
+func (A *APIError) NewErr(err error) *APIError {
+	return &APIError{
+		Code: A.Code,
+		Msg:  fmt.Sprintf("%v:%v", A.Msg, err),
+	}
+}
+
+// 拼接错误信息，生成一个新的错误响应
+func (A *APIError) NewErrStr(s string) *APIError {
+	return &APIError{
+		Code: A.Code,
+		Msg:  fmt.Sprintf("%v:%v", A.Msg, s),
+	}
 }

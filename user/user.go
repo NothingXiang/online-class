@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+const (
+	Student = 0
+	Teacher = 1
+)
+
 // 用户
 type User struct {
 
@@ -19,10 +24,13 @@ type User struct {
 	// 用户手机号
 	Phone string `json:"phone" bson:"phone"`
 
+	// 邮箱
+	Email string `json:"email" bson:"email"`
+
 	// 密码
 	Password string `json:"password" bson:"password"`
 
-	// 用户类型: 暂定为:1教师 2学生 3家长
+	// 用户类型: 暂定为:1教师 2学生
 	UserType int `json:"user_type" bson:"user_type"`
 
 	// 用户头像路径
@@ -35,6 +43,7 @@ type User struct {
 	UpdateTime time.Time `json:"update_time" bson:"update_time"`
 }
 
+/*
 type BaseDto struct {
 	Name string `json:"name"`
 
@@ -46,4 +55,9 @@ type BaseDto struct {
 type WXLoginDto struct {
 	BaseDto
 	OpenID string `json:"open_id"`
+}*/
+
+// 检查user_type是否符合规范
+func (u *User) CheckType() bool {
+	return u.UserType == Teacher || u.UserType == Student
 }

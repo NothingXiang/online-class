@@ -12,7 +12,7 @@ type APIResp struct {
 
 // 用于返回带有处理结果和错误信息的resp
 func NewAPIResp(data interface{}, err *APIError) *APIResp {
-	return &APIResp{Code: err.Code, Msg: err.Message, Data: data}
+	return &APIResp{Code: err.Code, Msg: err.Error(), Data: data}
 }
 
 // 用于返回只带有错误信息的resp
@@ -21,7 +21,7 @@ func ErrResp(err error) *APIResp {
 	case *APIError:
 		return &APIResp{Code: err.Code, Msg: err.Error()}
 	default:
-		return ErrResp(UnknownError.SetMsg(err))
+		return ErrResp(UnknownError.NewErr(err))
 	}
 
 }
