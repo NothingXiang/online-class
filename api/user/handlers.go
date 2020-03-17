@@ -33,7 +33,7 @@ func init() {
 func LoginByPhonePwd(c *gin.Context) {
 	var user user2.User
 	if err := c.BindJSON(&user); err != nil {
-		c.JSON(http.StatusOK, resp.ErrResp(resp.ParamFmtErr))
+		c.JSON(http.StatusOK, resp.ParamFmtErr)
 		return
 	}
 
@@ -83,8 +83,7 @@ func CreateUserByPhonePwd(c *gin.Context) {
 	e := us.Create(&user)
 	if e != nil {
 		log.Println(e)
-		c.JSON(http.StatusOK,
-			resp.UnknownError.NewErr(e))
+		c.JSON(http.StatusOK, resp.ErrResp(e))
 		return
 	}
 

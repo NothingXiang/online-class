@@ -20,15 +20,14 @@ func init() {
 		log.Fatalf("[NewSession] dial mongo failed:%v", err)
 	}
 
-
 	// 初始化redis连接
-	Redis = redis.NewClient(&redis.Options{
+	redisClient = redis.NewClient(&redis.Options{
 		Addr:     config.GetDeStr("redis.addr", "localhost:6379"),
 		Password: viper.GetString("redis.pwd"),
 		DB:       viper.GetInt("redis.db"),
 	})
-	if _, err = Redis.Ping().Result(); err != nil {
-		log.Fatalf("[NewRedisConnect] dial Redis failed:%v", err)
+	if _, err = redisClient.Ping().Result(); err != nil {
+		log.Fatalf("[NewRedisConnect] dial redisClient failed:%v", err)
 	}
 }
 
@@ -39,4 +38,8 @@ func MgoDB() *mgo.Database {
 // 返回对应的collection
 func MongoColl(name string) *mgo.Collection {
 	return MgoDB().C(name)
+}
+
+func Redis() *redis.Client {
+	return redisClient
 }

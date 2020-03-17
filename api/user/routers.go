@@ -22,6 +22,7 @@ func RegisterRoutes(e *gin.Engine) {
 		// 上传头像
 		user.POST("/avatar", UploadAvatar)
 
+		// todo:gin server static
 		//	获取头像
 		user.GET("/avatar", GetAvatar)
 	}

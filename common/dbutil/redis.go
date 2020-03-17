@@ -5,6 +5,6 @@ import (
 )
 
 var (
-	Redis *redis.Client
+	redisClient *redis.Client
 )
 

@@ -14,10 +14,10 @@ type Class struct {
 
 	// 班主任id
 	MasterID string `json:"master_id" bson:"master_id"`
-
 	//
-	Teachers []string `json:"teachers" bson:"teachers"`
-
-	//	学生
-	students []string `json:"students"`
+	////
+	//Teachers []Teacher `json:"teachers" bson:"teachers"`
+	//
+	////	学生
+	//students []Student `json:"students"`
 }

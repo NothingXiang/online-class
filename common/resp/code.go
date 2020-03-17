@@ -11,6 +11,8 @@ var (
 	ParamEmptyErr   = newAPIError(10005, "param empty error")
 	RepeatError     = newAPIError(10006, "repeat error")
 
+	DBError = newAPIError(10007, "db error")
+
 	NotAuthError    = newAPIError(40001, "User authentication failed")
 	TooManyReqError = newAPIError(40029, "too many request, has been limit")
 
@@ -18,7 +20,6 @@ var (
 )
 
 var (
-
 	Unknown      = NewAPIResp(nil, UnknownError)
 	NotExist     = NewAPIResp(nil, NotExistError)
 	InvalidParam = NewAPIResp(nil, InvalidParamErr)

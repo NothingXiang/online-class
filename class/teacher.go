@@ -34,18 +34,14 @@ type Teacher struct {
 	// 外键，老师所属的班级
 	ClassID string `json:"class_id" bson:"class_id"`
 
-	// todo:这个可以拆到redis里
 	// 老师所教授的科目
-	Subject []Subject `json:"subject" bson:"subject"`
+	Subjects []Subject `json:"subjects" bson:"subjects"`
 }
 
-func (t *Teacher) CheckSubject() bool {
-	for _, s := range t.Subject {
-		if _, ok := SubjectTable[s]; !ok {
-			return false
-		}
-	}
-	return true
+// 校验subjects参数
+func CheckSubject(t Subject) bool {
+
+	return SubjectTable[t]
 }
 
 var SubjectTable = map[Subject]bool{
@@ -66,4 +62,9 @@ var SubjectTable = map[Subject]bool{
 	Art:        true,
 	Music:      true,
 	Others:     true,
+}
+
+type AddTeacherDto struct {
+	Teacher
+	ClassID string `json:"class_id"`
 }
