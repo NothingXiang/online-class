@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/NothingXiang/online-class/api/class"
 	"github.com/NothingXiang/online-class/api/user"
 	"github.com/NothingXiang/online-class/common/pkg"
 	"github.com/spf13/viper"
@@ -27,6 +28,7 @@ func Serve(info pkg.Info) {
 	})
 
 	user.RegisterRoutes(engine)
+	class.RegisterRouters(engine)
 
 	port := viper.GetString("http.port")
 	if err := engine.Run(":" + port); err != nil {

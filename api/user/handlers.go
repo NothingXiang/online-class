@@ -2,7 +2,6 @@ package user
 
 import (
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -70,10 +69,12 @@ func CreateUserByPhonePwd(c *gin.Context) {
 	if !req.CheckEmpty(c, user.Name, user.Phone, user.Password) {
 		return
 	}
-	if !utils.IsPhoneNum(user.Phone) {
+
+	// todo：测试模式下，不检验这个
+	/*if !utils.IsPhoneNum(user.Phone) {
 		c.JSON(http.StatusOK, resp.InvalidParamErr.NewErr(errors.New("phone number")))
 		return
-	}
+	}*/
 	if !user.CheckType() {
 		c.JSON(http.StatusOK, resp.InvalidParamErr)
 		return
@@ -113,13 +114,13 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	dir := fmt.Sprintf("%v/%v/avatar.jpg",
+	dir := fmt.Sprintf("%v/%v",
 		config.GetDeStr("avatar.dir", "./avatar"),
 		id)
 
 	// 创建目录并且保存文件
 	os.MkdirAll(dir, os.ModeDir)
-	if e := c.SaveUploadedFile(file, dir); e != nil {
+	if e := c.SaveUploadedFile(file, dir+"/avatar.jpg"); e != nil {
 		c.JSON(http.StatusOK,
 			resp.UnknownError.NewErr(e))
 		return

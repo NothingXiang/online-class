@@ -14,6 +14,13 @@ type ClassServiceImpl struct {
 	us store2.UserStore
 }
 
+func NewClassServiceImpl() *ClassServiceImpl {
+	return &ClassServiceImpl{
+		cs: &store.ClassMgoStore{},
+		us: &store2.UserMgoStore{},
+	}
+}
+
 // 创建一个班级，只有班主任才能创建班级
 func (c *ClassServiceImpl) CreateClass(cl *class.Class) error {
 	// 1. 检查创建人的身份,必须是教师
@@ -91,9 +98,13 @@ func (c *ClassServiceImpl) GetStudents(cid string, page, limit int) ([]*class.St
 	return ss, err
 }
 
-func (c *ClassServiceImpl) AddStudent(dto *class.AddStudentDto) error {
+func (c *ClassServiceImpl) AddStudent(dto *class.Student) error {
 
-	return c.cs.AddStudent(dto.ClassID, &dto.Student)
+	//todo: 在权限系统里校验一下学生身份
+	// todo: 检查是否已经重复
+
+	dto.ID = uuid.NewV4().String()
+	return c.cs.AddStudent(dto.ClassID, dto)
 }
 
 func (c *ClassServiceImpl) RemoveStudent(classID, studentID string) error {
@@ -101,6 +112,15 @@ func (c *ClassServiceImpl) RemoveStudent(classID, studentID string) error {
 }
 
 func (c *ClassServiceImpl) AddTeacher(dto *class.AddTeacherDto) error {
+
+	//todo: 校验一下教师身份
+	// todo: 检查是否已经重复
+
+
+
+
+	dto.ID = uuid.NewV4().String()
+
 	return c.cs.AddTeacher(&dto.Teacher)
 }
 

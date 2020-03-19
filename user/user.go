@@ -30,7 +30,7 @@ type User struct {
 	// 密码
 	Password string `json:"password" bson:"password"`
 
-	// 用户类型: 暂定为:1教师 2学生
+	// 用户类型: 暂定为:1教师 0学生
 	UserType int `json:"user_type" bson:"user_type"`
 
 	// 用户头像路径

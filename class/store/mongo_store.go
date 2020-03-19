@@ -157,7 +157,7 @@ func (c *ClassMgoStore) AddTechSubject(classID, teacherID string, s class.Subjec
 		},
 	}
 
-	return dbutil.MongoColl(teacherID).Update(selector, update)
+	return dbutil.MongoColl(TeacherClct).Update(selector, update)
 
 }
 
@@ -168,12 +168,12 @@ func (c *ClassMgoStore) DeleteTechSubject(classID, teacherID string, s class.Sub
 	}
 
 	update := bson.M{
-		"pull": bson.M{
+		"$pull": bson.M{
 			"subjects": s,
 		},
 	}
 
-	return dbutil.MongoColl(teacherID).Update(selector, update)
+	return dbutil.MongoColl(TeacherClct).Update(selector, update)
 }
 
 func (c *ClassMgoStore) UpdateMaster(classID, masterID string) error {

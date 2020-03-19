@@ -69,7 +69,7 @@ func (u *UserMgoStore) UpdateUser(user *user.User) error {
 func (u *UserMgoStore) FindUser(id string) (*user.User, error) {
 	var user user.User
 
-	if err := dbutil.MongoColl(UserClct).FindId(id).One(&u); err != nil {
+	if err := dbutil.MongoColl(UserClct).FindId(id).One(&user); err != nil {
 		return nil, err
 	}
 

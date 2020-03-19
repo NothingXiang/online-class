@@ -22,7 +22,7 @@ type ClassService interface {
 	GetStudents(cid string, page, limit int) ([]*class.Student, error)
 
 	// 班级增加学生
-	AddStudent(dto *class.AddStudentDto) error
+	AddStudent(dto *class.Student) error
 
 	// 班级开除学生
 	RemoveStudent(classID, studentID string) error

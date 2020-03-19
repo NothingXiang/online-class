@@ -15,18 +15,19 @@ var (
 )
 
 func init() {
-	//	todo: 实例化ClassService...
+	cs = services.NewClassServiceImpl()
 }
 
 func GetClassesByUser(c *gin.Context) {
 
 	uid, ok := req.TryGetParam("uid", c)
-	if !ok {
+	userType, ok2 := req.TryGetInt("type", c)
+	if !ok || !ok2 {
 		resp.Json(c, resp.ParamEmptyErr)
 		return
 	}
 
-	cls, err := cs.GetClassByUser(uid)
+	cls, err := cs.GetClassByUser(uid, userType)
 
 	if err != nil {
 		resp.Json(c, resp.ErrResp(err))
@@ -82,8 +83,8 @@ func ListTeacher(c *gin.Context) {
 func ListStudentPageable(c *gin.Context) {
 	// 1. 获取入参
 	cid, ok := req.TryGetParam("cid", c)
-	page := c.GetInt("page")
-	limit := c.GetInt("limit")
+	page, _ := req.TryGetInt("page", c)
+	limit, _ := req.TryGetInt("limit", c)
 
 	if !ok || !req.CheckPage(page, limit) {
 		resp.Json(c, resp.ParamEmptyErr)
@@ -99,6 +100,7 @@ func ListStudentPageable(c *gin.Context) {
 
 	resp.Json(c, resp.NewSucResp(ts))
 }
+
 /*
 func GetTeacher(c *gin.Context) {
 	uid, ok := req.TryGetParam("user_id", c)
@@ -140,9 +142,13 @@ func AddTeacher(c *gin.Context) {
 
 func AddStudent(c *gin.Context) {
 
-	var t class.AddStudentDto
+	var t class.Student
 	if err := c.BindJSON(&t); err != nil {
 		resp.Json(c, resp.ParamFmtErr)
+		return
+	}
+
+	if !req.CheckEmpty(c, t.ClassID, t.UserID, t.Name) {
 		return
 	}
 
@@ -155,6 +161,7 @@ func AddStudent(c *gin.Context) {
 	resp.Json(c, resp.NewSucResp(&t))
 }
 
+// todo: 可以改成传个dto...一个个获取参数也太累了.....
 func DeleteSubject(c *gin.Context) {
 
 	var cid, tid string
@@ -164,20 +171,19 @@ func DeleteSubject(c *gin.Context) {
 		resp.Json(c, resp.ParamEmptyErr)
 		return
 	}
-	tid, flag = req.TryGetParam("cid", c)
+	tid, flag = req.TryGetParam("tid", c)
 	if !flag {
 		resp.Json(c, resp.ParamEmptyErr)
 		return
 	}
 
-	var s class.Subject
-	s = class.Subject(c.GetInt("subject"))
-	if !class.CheckSubject(s) {
+	s, _ := req.TryGetInt("subject", c)
+	if !class.CheckSubject(class.Subject(s)) {
 		resp.Json(c, resp.ParamFmtErr)
 		return
 	}
 
-	err := cs.RemoveSubject(cid, tid,s)
+	err := cs.RemoveSubject(cid, tid, class.Subject(s))
 	if err != nil {
 		resp.Json(c, resp.ErrResp(err))
 		return
@@ -191,27 +197,26 @@ func AddSubject(c *gin.Context) {
 
 	var cid, tid string
 	var flag bool
-	var s class.Subject
 
 	cid, flag = req.TryGetParam("cid", c)
 	if !flag {
 		resp.Json(c, resp.ParamEmptyErr)
 		return
 	}
-	tid, flag = req.TryGetParam("cid", c)
+	tid, flag = req.TryGetParam("tid", c)
 	if !flag {
 		resp.Json(c, resp.ParamEmptyErr)
 		return
 	}
 
-	s = class.Subject(c.GetInt("subject"))
+	s, _ := req.TryGetInt("subject", c)
 
-	if !class.CheckSubject(s) {
+	if !class.CheckSubject(class.Subject(s)) {
 		resp.Json(c, resp.ParamFmtErr)
 		return
 	}
 
-	err := cs.AddSubject(cid, tid, s)
+	err := cs.AddSubject(cid, tid, class.Subject(s))
 
 	if err != nil {
 		resp.Json(c, resp.ErrResp(err))

@@ -26,7 +26,7 @@ const (
 type Teacher struct {
 
 	// 唯一标识
-	ID string `json:"id" bson:"id"`
+	ID string `json:"id" bson:"_id"`
 
 	//外键，教师应该是用户中的一员,该id应该与user中某一位相同
 	UserID string `json:"user_id" bson:"user_id"`
