@@ -16,5 +16,5 @@ type Student struct {
 /*
 type AddStudentDto struct {
 	Student
-	ClassID string `json:"class_id"`
+	Class string `json:"class_id"`
 }*/

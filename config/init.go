@@ -42,7 +42,7 @@ func Init() {
 	})
 }
 
-// 从配置总获取值，如果获取不到则回传defaultValue
+// 从配置中获取值，如果获取不到则回传defaultValue
 func GetDeStr(key, defVal string) string {
 	var value string
 	if value = viper.GetString(key); utils.IsEmptyString(value) {
@@ -50,3 +50,4 @@ func GetDeStr(key, defVal string) string {
 	}
 	return value
 }
+
