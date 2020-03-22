@@ -12,7 +12,7 @@ type NoticeStore interface {
 	//	发布公告
 	CreateNotice(n *notice.Notice) error
 
-	// 移除通知 返回班级id和error
+	// 移除通知 返回**班级id**和error
 	RemoveNotice(noticeID string) (string,error)
 
 	//	编辑公告

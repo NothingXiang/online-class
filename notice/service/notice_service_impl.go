@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	// 通知存储在redis中的key, 占位符中填class id:page:size
+	// 通知存储在redis中的key, 占位符中填class id
 	RedisNoticeKey = "Notice:%v"
 )
 
@@ -66,19 +66,21 @@ func (n *NoticeServiceImpl) CreateNotice(ntc *notice.Notice) error {
 	}
 
 	//clear class notice cache
-	dbutil.Redis().Del(ntc.Class)
+	dbutil.Redis().Del(fmt.Sprintf(RedisNoticeKey, ntc.Class))
 
 	return nil
 }
 
 func (n *NoticeServiceImpl) UpdateNotice(update *notice.Notice) error {
 
+	update.UpdateTime = time.Now()
+
 	err := n.store.UpdateNotice(update)
 	if err != nil {
 		return err
 	}
 	//clear class notice cache
-	dbutil.Redis().Del(update.Class)
+	dbutil.Redis().Del(fmt.Sprintf(RedisNoticeKey, update.Class))
 
 	return nil
 }
@@ -111,4 +113,3 @@ func GetNoticeFromRedis(key, field string) ([]*notice.Notice, error) {
 
 	return result, nil
 }
-
