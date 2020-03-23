@@ -1,8 +1,9 @@
 package config
 
 import (
-	"log"
 	"sync"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/NothingXiang/online-class/common/utils"
 	"github.com/fsnotify/fsnotify"
@@ -26,7 +27,7 @@ func Init() {
 		viper.SetConfigName(defaultConfigFile)
 		viper.AddConfigPath(defaultConfigPath)
 		if err := viper.ReadInConfig(); err != nil {
-			log.Fatalf("[Load Config]failed:%v", err)
+			log.Errorf("[Load Config]failed:%v", err)
 		}
 
 		// 支持配置热更新
@@ -34,7 +35,7 @@ func Init() {
 		viper.OnConfigChange(func(in fsnotify.Event) {
 			log.Println("Config has been changed")
 			if err := viper.ReadInConfig(); err != nil {
-				log.Fatalf("[ReLoad Config]failed:%v", err)
+				log.Errorf("[ReLoad Config]failed:%v", err)
 			}
 			log.Println("Config change finish ")
 		})
@@ -50,4 +51,3 @@ func GetDeStr(key, defVal string) string {
 	}
 	return value
 }
-
