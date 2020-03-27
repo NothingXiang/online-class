@@ -28,6 +28,32 @@ func init() {
 	}
 }
 
+//
+func GetAccountByWeChat(c *gin.Context) {
+	code, ok := req.TryGetParam("code", c)
+	if !ok {
+		resp.Json(c, resp.ParamEmptyErr)
+		return
+	}
+
+	user, err := us.CheckUserByWeChat(code)
+
+	if err != nil {
+		resp.Json(c, resp.ErrResp(err))
+		return
+	}
+
+	resp.Json(c, resp.NewSucResp(user))
+
+}
+
+func LoginByWeChat(c *gin.Context) {
+
+	//	 1. get mini-program code
+	//code, _ := req.TryGetParam("code", c)
+
+}
+
 // 通过手机号和密码登录
 func LoginByPhonePwd(c *gin.Context) {
 	var user user2.User

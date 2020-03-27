@@ -94,3 +94,41 @@ func GetNoticeByClassPageable(c *gin.Context) {
 
 	resp.Json(c, resp.NewSucResp(class))
 }
+
+// 添加某条通知的已读列表
+func AddNoticeRead(c *gin.Context) {
+
+	nid, ok := req.TryGetParam("nid", c)
+
+	uid, ok2 := req.TryGetParam("uid", c)
+
+	if !ok || !ok2 {
+		resp.Json(c, resp.ParamEmptyErr)
+		return
+	}
+
+	ns.AddNoticeReadList(nid, uid)
+
+	resp.Json(c, resp.NewSucResp(nil))
+
+	return
+
+}
+
+// 获取某个通知的已读列表
+func GetReadList(c *gin.Context) {
+
+	nid, ok := req.TryGetParam("nid", c)
+	if !ok {
+		resp.Json(c, resp.ParamEmptyErr)
+		return
+	}
+
+	list, err := ns.GetReadList(nid)
+	if err != nil {
+		resp.Json(c, resp.ErrResp(err))
+		return
+	}
+
+	resp.Json(c, resp.NewSucResp(list))
+}

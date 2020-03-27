@@ -28,18 +28,21 @@ func TestEmailValidator_GenerateCode(t *testing.T) {
 			"",
 			args{
 				// todo : change to you test email address
-				toEmail: "test@163.com",
+				toEmail: "wei_class@foxmail.com",
 				expire:  30 * time.Minute,
 			},
 			false,
 		},
 	}
 	for _, tt := range tests {
+		//for i := 0; i < 10; i++ {
 		t.Run(tt.name, func(t *testing.T) {
 			e := &EmailValidator{}
 			if err := e.GenerateCode(tt.args.toEmail, tt.args.expire); (err != nil) != tt.wantErr {
 				t.Errorf("GenerateCode() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
+		//}
+
 	}
 }

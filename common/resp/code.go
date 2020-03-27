@@ -13,6 +13,8 @@ var (
 
 	DBError = newAPIError(10007, "db error")
 
+	OutDoorError = newAPIError(10008, "other system error")
+
 	NotAuthError    = newAPIError(40001, "User authentication failed")
 	TooManyReqError = newAPIError(40029, "too many request, has been limit")
 
