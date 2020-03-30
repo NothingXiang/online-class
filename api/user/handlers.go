@@ -106,7 +106,6 @@ func CreateUserByPhonePwd(c *gin.Context) {
 		return
 	}
 
-	//	 todo:入库操作...
 	e := us.Create(&user)
 	if e != nil {
 		log.Println(e)

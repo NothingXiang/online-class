@@ -5,10 +5,12 @@ import (
 	"log"
 	"time"
 
+	store3 "github.com/NothingXiang/online-class/class/store"
 	"github.com/NothingXiang/online-class/common/dbutil"
 	"github.com/NothingXiang/online-class/common/resp"
 	"github.com/NothingXiang/online-class/notice"
 	"github.com/NothingXiang/online-class/notice/store"
+	store2 "github.com/NothingXiang/online-class/user/store"
 	jsoniter "github.com/json-iterator/go"
 	uuid "github.com/satori/go.uuid"
 )
@@ -16,14 +18,40 @@ import (
 const (
 	// 通知存储在redis中的key, 占位符中填class id
 	RedisNoticeKey = "Notice:%v"
+
+	// 某条通知的已读列表 key为noticeID ，value是list， 存储用户id
+	RedisReadNotice = "ReadNoticeList:%v"
 )
 
 type NoticeServiceImpl struct {
-	store store.NoticeStore
+	NoticeStore store.NoticeStore
+	UserStore   store2.UserStore
+	ClassStore  store3.ClassStore
+}
+
+func (n *NoticeServiceImpl) GetReadList(noticeID string) ([]string, error) {
+	return dbutil.Redis().SMembers(fmt.Sprintf(RedisReadNotice, noticeID)).Result()
+}
+
+func (n *NoticeServiceImpl) GetNotice(noticeID string) (*notice.Notice, error) {
+	ntc, err := n.NoticeStore.GetNotice(noticeID)
+
+	if err != nil {
+		return nil, resp.DBError.NewErr(err)
+	}
+
+	return ntc, nil
+}
+
+func (n *NoticeServiceImpl) AddNoticeReadList(noticeID, userID string) error {
+
+	dbutil.Redis().SAdd(fmt.Sprintf(RedisReadNotice, noticeID), userID)
+
+	return nil
 }
 
 func (n *NoticeServiceImpl) RemoveNotice(noticeID string) error {
-	cid, err := n.store.RemoveNotice(noticeID)
+	cid, err := n.NoticeStore.RemoveNotice(noticeID)
 	if err != nil {
 		return err
 	}
@@ -44,7 +72,7 @@ func (n *NoticeServiceImpl) GetNoticeByClass(classID string, page, limit int) ([
 		return results, nil
 	}
 
-	results, err = n.store.GetNoticeByClass(classID, (page-1)*limit, limit)
+	results, err = n.NoticeStore.GetNoticeByClass(classID, (page-1)*limit, limit)
 	if err != nil {
 		return nil, resp.DBError.NewErr(err)
 	}
@@ -60,7 +88,7 @@ func (n *NoticeServiceImpl) CreateNotice(ntc *notice.Notice) error {
 	ntc.ID = uuid.NewV4().String()
 	ntc.CreateTime = time.Now()
 
-	err := n.store.CreateNotice(ntc)
+	err := n.NoticeStore.CreateNotice(ntc)
 	if err != nil {
 		return err
 	}
@@ -75,7 +103,7 @@ func (n *NoticeServiceImpl) UpdateNotice(update *notice.Notice) error {
 
 	update.UpdateTime = time.Now()
 
-	err := n.store.UpdateNotice(update)
+	err := n.NoticeStore.UpdateNotice(update)
 	if err != nil {
 		return err
 	}
@@ -86,12 +114,12 @@ func (n *NoticeServiceImpl) UpdateNotice(update *notice.Notice) error {
 }
 
 func (n *NoticeServiceImpl) GetNoticeTemplate(noticeType string) ([]*notice.Template, error) {
-	return n.store.GetNoticeTemplate(noticeType)
+	return n.NoticeStore.GetNoticeTemplate(noticeType)
 }
 
 /*
 func (n *NoticeServiceImpl) BatchCreateTemplate(tmpls []*notice.Template) error {
-	return n.store.BatchCreateTemplate(tmpls)
+	return n.NoticeStore.BatchCreateTemplate(tmpls)
 }*/
 
 // 从redis里的hash中获取通知列表
@@ -101,7 +129,7 @@ func GetNoticeFromRedis(key, field string) ([]*notice.Notice, error) {
 
 	s, err := dbutil.Redis().HGet(key, field).Result()
 	if err != nil {
-		log.Printf("get notice %v from redis error:%v", key, err)
+		log.Printf("get notice %v from redis error:%v\n", key, err)
 		return nil, err
 	}
 

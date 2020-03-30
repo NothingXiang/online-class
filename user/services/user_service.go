@@ -16,4 +16,7 @@ type UserService interface {
 
 	// 根据id和密码检查是否存在该用户
 	CheckUserIdAndPwd(id, pwd string) error
+
+	// 通过小程序回传的wechat code 来检查是否存在该用户
+	CheckUserByWeChat(code string) (*user.User, error)
 }

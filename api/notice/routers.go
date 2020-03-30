@@ -7,7 +7,7 @@ import (
 func RegisterRouters(e *gin.Engine) {
 	notice := e.Group("/notice")
 	{
-		notice.GET("/get", GetNoticeByClassPageable)
+		notice.GET("/list", GetNoticeByClassPageable)
 
 		// 添加某条通知的已读列表
 		notice.POST("/add/read", AddNoticeRead)

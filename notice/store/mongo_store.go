@@ -14,6 +14,20 @@ const (
 type NoticeMgoStore struct {
 }
 
+func (n *NoticeMgoStore) GetNotice(noticeID string) (*notice.Notice, error) {
+
+	var ntc notice.Notice
+
+	err := dbutil.MongoColl(NoticeClct).FindId(noticeID).One(&ntc)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ntc, nil
+
+}
+
 func (n *NoticeMgoStore) GetNoticeByClass(classID string, skip, limit int) (ns []*notice.Notice, err error) {
 
 	query := bson.M{
@@ -58,12 +72,19 @@ func (n *NoticeMgoStore) RemoveNotice(noticeID string) (string, error) {
 
 func (n *NoticeMgoStore) UpdateNotice(update *notice.Notice) error {
 	updator := bson.M{
-		"$set": bson.M{
-			"title":       update.Title,
-			"content":     update.Content,
-			"update_time": update.UpdateTime,
-			"photos":      update.Photos,
-		},
+		"update_time": update.UpdateTime,
+	}
+
+	if update.Title != "" {
+		updator["title"] = update.Title
+	}
+
+	if update.Content != "" {
+		updator["content"] = update.Content
+	}
+
+	if len(update.Photos) != 0 {
+		updator["photos"] = update.Photos
 	}
 
 	err := dbutil.MongoColl(NoticeClct).UpdateId(update.ID, updator)

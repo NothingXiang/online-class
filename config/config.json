@@ -1,8 +1,10 @@
 {
   "gin.mode": "debug",
   "http.port": 8080,
-  "app.id": "wxc4f8fb68b68c50c7",
-  "app.secret": "qazwsxedcrfv",
+  "wechat": {
+    "appid": "wx0bb46057698f3483",
+    "appsecret": "ddc7835e04e2b639733ff571e079f7c5"
+  },
   "mgo": {
     "url": "localhost:27017/online-class",
     "host": "localhost",
@@ -16,5 +18,11 @@
     "pwd": "",
     "db": 0
   },
-  "avatar.dir": "./"
+  "avatar.dir": "./",
+  "email": {
+    "addr": "smtp.qq.com",
+    "account": "wei_class@foxmail.com",
+    "port": 587,
+    "pwd": "okuxjmiogmjwebfg"
+  }
 }

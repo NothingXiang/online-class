@@ -1,10 +1,13 @@
 package notice
 
 import (
+	store3 "github.com/NothingXiang/online-class/class/store"
 	"github.com/NothingXiang/online-class/common/req"
 	"github.com/NothingXiang/online-class/common/resp"
 	"github.com/NothingXiang/online-class/notice"
 	"github.com/NothingXiang/online-class/notice/service"
+	"github.com/NothingXiang/online-class/notice/store"
+	store2 "github.com/NothingXiang/online-class/user/store"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +16,12 @@ var (
 )
 
 func init() {
-	//	 todo: 初始化notice service
+
+	ns = &service.NoticeServiceImpl{
+		NoticeStore: &store.NoticeMgoStore{},
+		UserStore:   &store2.UserMgoStore{},
+		ClassStore:  &store3.ClassMgoStore{},
+	}
 }
 
 func UpdateNotice(c *gin.Context) {

@@ -21,7 +21,7 @@ var PkgInfo = pkg.Info{
 func main() {
 
 	// 1. load common line args
-	// todo:may be can update to cobra
+	//  can update to cobra
 	//flag.Parse()
 
 	//2. recover

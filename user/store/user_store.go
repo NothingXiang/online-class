@@ -19,6 +19,9 @@ type UserStore interface {
 	// 查
 	FindUser(id string) (*user.User, error)
 
+	// 通过微信openID查找用户
+	FindUserByOpenID(openID string) (*user.User, error)
+
 	//
 	FindUserByPwd(name, pwd string) (*user.User, error)
 

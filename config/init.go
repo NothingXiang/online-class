@@ -21,7 +21,7 @@ var (
 	GinMode string = "debug"
 )
 
-// todo: attention!需要依赖配置的地方都必须手动调用一次该方法！
+//  attention!需要依赖配置的地方最好手动调用一次该方法！
 func Init() {
 	onceInit.Do(func() {
 		viper.SetConfigName(defaultConfigFile)

@@ -5,14 +5,34 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/NothingXiang/online-class/common/req"
 	"github.com/NothingXiang/online-class/common/resp"
 	"github.com/NothingXiang/online-class/user"
 	"github.com/NothingXiang/online-class/user/store"
 	uuid "github.com/satori/go.uuid"
+	"github.com/sirupsen/logrus"
 )
 
 type UserServiceImpl struct {
 	Store store.UserStore
+}
+
+func (u *UserServiceImpl) CheckUserByWeChat(code string) (*user.User, error) {
+
+	weChatData, err := req.CodeToWeChat(code)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	user, err := u.Store.FindUserByOpenID(weChatData.OpenID)
+
+	if err != nil {
+		logrus.Printf("find user failed:%v", err)
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (u *UserServiceImpl) CheckUserIdAndPwd(id, pwd string) error {

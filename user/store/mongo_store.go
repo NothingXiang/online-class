@@ -13,6 +13,18 @@ const (
 type UserMgoStore struct {
 }
 
+func (u *UserMgoStore) FindUserByOpenID(openID string) (*user.User, error) {
+	find := bson.M{
+		"open_id": openID,
+	}
+	var user user.User
+	if err := dbutil.MongoColl(UserClct).Find(find).One(&user); err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (u *UserMgoStore) FindUserByIdandPwd(id, pwd string) (*user.User, error) {
 	find := bson.M{
 		"_id":      id,
