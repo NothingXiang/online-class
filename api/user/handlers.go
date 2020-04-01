@@ -127,11 +127,11 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	if err := us.CheckUserIdAndPwd(id, pwd); err != nil {
+/*	if err := us.CheckUserIdAndPwd(id, pwd); err != nil {
 		log.Println(err)
 		c.JSON(http.StatusOK, resp.ErrResp(err))
 		return
-	}
+	}*/
 
 	file, err := c.FormFile("uploadAvatar")
 	if err != nil {
@@ -140,7 +140,7 @@ func UploadAvatar(c *gin.Context) {
 	}
 
 	dir := fmt.Sprintf("%v/%v",
-		config.GetDeStr("avatar.dir", "./avatar"),
+		config.GetDeStr("dir.avatar", "./avatar"),
 		id)
 
 	// 创建目录并且保存文件
@@ -174,7 +174,7 @@ func GetAvatar(c *gin.Context) {
 
 	// 获取图片
 	dir := fmt.Sprintf("%v/%v/%v",
-		config.GetDeStr("avatar.dir", "./avatar"),
+		config.GetDeStr("dir.avatar", "./avatar"),
 		id, "avatar.jpg")
 
 	file, e := ioutil.ReadFile(dir)

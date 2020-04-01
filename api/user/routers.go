@@ -5,7 +5,6 @@
 package user
 
 import (
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,6 +22,8 @@ func RegisterRoutes(e *gin.Engine) {
 		// 通过wechat code 登录，注意，会检查该微信账号是否存在，不存在则返回新创建的账号
 		user.POST("/login/wechat", LoginByWeChat)
 
+		user.POST("/register/wechat", RegisterByWeChat)
+
 		//	注销用户
 		//user.DELETE(":userid", Logout)
 
@@ -35,3 +36,7 @@ func RegisterRoutes(e *gin.Engine) {
 	}
 }
 
+// todo:unfinished
+func RegisterByWeChat(c *gin.Context) {
+
+}

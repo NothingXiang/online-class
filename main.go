@@ -4,12 +4,13 @@
 package main
 
 import (
-	"log"
+	"flag"
 	"time"
 
 	"github.com/NothingXiang/online-class/api"
 	"github.com/NothingXiang/online-class/common/pkg"
 	"github.com/NothingXiang/online-class/config"
+	"github.com/sirupsen/logrus"
 )
 
 var PkgInfo = pkg.Info{
@@ -22,14 +23,14 @@ func main() {
 
 	// 1. load common line args
 	//  can update to cobra
-	//flag.Parse()
+	flag.Parse()
 
 	//2. recover
 	defer func() {
 		if r := recover(); r != nil {
-			log.Println(PkgInfo.AppName, "Process Stop : ", r)
+			logrus.Error(PkgInfo.AppName, " Process Stop : ", r)
 		} else {
-			log.Println(PkgInfo.AppName, "Process Stop")
+			logrus.Error(PkgInfo.AppName, " Process Stop")
 		}
 	}()
 

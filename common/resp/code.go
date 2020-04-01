@@ -15,7 +15,9 @@ var (
 
 	OutDoorError = newAPIError(10008, "other system error")
 
-	ForbiddenError=newAPIError(10009,"forbidden operation")
+	ForbiddenError = newAPIError(10009, "forbidden operation")
+
+	UploadFileError = newAPIError(10010, "upload file failed")
 
 	NotAuthError    = newAPIError(40001, "User authentication failed")
 	TooManyReqError = newAPIError(40029, "too many request, has been limit")
