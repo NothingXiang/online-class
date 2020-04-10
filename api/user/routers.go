@@ -16,23 +16,17 @@ func RegisterRoutes(e *gin.Engine) {
 		// 登录
 		user.POST("/login/phone", LoginByPhonePwd)
 
-		// 通过微信id检查账户是否已经存在
-		user.POST("/get/account/wechat", GetAccountByWeChat)
+		// 通过微信id登录
+		user.GET("/login/wechat", LoginByWeChatCode)
 
-		// 通过wechat code 登录，注意，会检查该微信账号是否存在，不存在则返回新创建的账号
-		user.POST("/login/wechat", LoginByWeChat)
+		// 通过WeChat 创建账号，注意，检查该微信账号是否存在(openID)
+		user.POST("/create/wechat", CreateByWeChat)
 
 		user.POST("/register/wechat", RegisterByWeChat)
 
 		//	注销用户
 		//user.DELETE(":userid", Logout)
 
-		// 上传头像
-		user.POST("/avatar", UploadAvatar)
-
-		// todo:gin server static
-		//	获取头像
-		user.GET("/avatar", GetAvatar)
 	}
 }
 

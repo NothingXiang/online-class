@@ -21,6 +21,9 @@ type User struct {
 	// 微信接口返回的用户唯一标识,可能用不上，先保留
 	OpenID string `json:"open_id" bson:"open_id"`
 
+	// 性别 1男 2女
+	Sex int `json:"sex" bson:"sex"`
+
 	// 用户手机号
 	Phone string `json:"phone" bson:"phone"`
 
@@ -43,19 +46,11 @@ type User struct {
 	UpdateTime time.Time `json:"update_time" bson:"update_time"`
 }
 
-/*
-type BaseDto struct {
-	Name string `json:"name"`
-
-	Password string `json:"password"`
-
-	UserType int `json:"user_type"`
+// 微信注册账号的dto
+type WeChatCrateDto struct {
+	User
+	Code string `json:"code" bson:"code"`
 }
-
-type WXLoginDto struct {
-	BaseDto
-	OpenID string `json:"open_id"`
-}*/
 
 // 检查user_type是否符合规范
 func (u *User) CheckType() bool {

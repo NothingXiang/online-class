@@ -19,4 +19,7 @@ type UserService interface {
 
 	// 通过小程序回传的wechat code 来检查是否存在该用户
 	CheckUserByWeChat(code string) (*user.User, error)
+
+	// 通过微信创建账号
+	CreateByWeChat(dto *user.WeChatCrateDto) error
 }

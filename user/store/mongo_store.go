@@ -18,7 +18,9 @@ func (u *UserMgoStore) FindUserByOpenID(openID string) (*user.User, error) {
 		"open_id": openID,
 	}
 	var user user.User
-	if err := dbutil.MongoColl(UserClct).Find(find).One(&user); err != nil {
+	err := dbutil.MongoColl(UserClct).Find(find).One(&user)
+
+	if err != nil  {
 		return nil, err
 	}
 

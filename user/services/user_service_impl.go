@@ -17,6 +17,34 @@ type UserServiceImpl struct {
 	Store store.UserStore
 }
 
+func (u *UserServiceImpl) CreateByWeChat(dto *user.WeChatCrateDto) error {
+
+	// 1. 用code向微信后台换取openid
+	weChatData, err := req.CodeToWeChat(dto.Code)
+	if err != nil {
+		logrus.Error(err)
+		return resp.WeChatError.NewErr(err)
+	}
+
+	// 2. 检查该账号是否已经存在
+	exist, _ := u.Store.FindUserByOpenID(weChatData.OpenID)
+	if exist != nil {
+		return resp.RepeatError.NewErrStr(weChatData.OpenID)
+	}
+
+	// 3.创建账号
+	dto.ID = uuid.NewV4().String()
+	dto.OpenID = weChatData.OpenID
+	dto.CreateTime = time.Now()
+	err = u.Store.CreateUser(&dto.User)
+
+	if err != nil {
+		return resp.DBError.NewErr(err)
+	}
+
+	return nil
+}
+
 func (u *UserServiceImpl) CheckUserByWeChat(code string) (*user.User, error) {
 
 	weChatData, err := req.CodeToWeChat(code)

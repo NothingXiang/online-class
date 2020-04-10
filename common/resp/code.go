@@ -19,6 +19,8 @@ var (
 
 	UploadFileError = newAPIError(10010, "upload file failed")
 
+	WeChatError = newAPIError(10011, "we chat error")
+
 	NotAuthError    = newAPIError(40001, "User authentication failed")
 	TooManyReqError = newAPIError(40029, "too many request, has been limit")
 

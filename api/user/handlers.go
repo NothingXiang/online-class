@@ -29,7 +29,7 @@ func init() {
 }
 
 //
-func GetAccountByWeChat(c *gin.Context) {
+func LoginByWeChatCode(c *gin.Context) {
 	code, ok := req.TryGetParam("code", c)
 	if !ok {
 		resp.Json(c, resp.ParamEmptyErr)
@@ -47,10 +47,33 @@ func GetAccountByWeChat(c *gin.Context) {
 
 }
 
-func LoginByWeChat(c *gin.Context) {
+// create account by wechat data
+func CreateByWeChat(c *gin.Context) {
 
-	//	 1. get mini-program code
-	//code, _ := req.TryGetParam("code", c)
+	// 1. get param
+	var dto user2.WeChatCrateDto
+	if err := c.Bind(&dto); err != nil {
+		resp.ErrJson(c, resp.ParamFmtErr)
+		return
+	}
+
+	// 2. check param
+	if !req.CheckEmpty(c, dto.Code, dto.Avatar) {
+		return
+	}
+	if !dto.CheckType() {
+		resp.ErrJson(c, resp.InvalidParamErr.NewErrStr("user_type"))
+		return
+	}
+
+	err := us.CreateByWeChat(&dto)
+
+	if err != nil {
+		resp.ErrJson(c, err)
+		return
+	}
+
+	resp.SucJson(c, dto.User)
 
 }
 
@@ -127,7 +150,7 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 
-/*	if err := us.CheckUserIdAndPwd(id, pwd); err != nil {
+	/*	if err := us.CheckUserIdAndPwd(id, pwd); err != nil {
 		log.Println(err)
 		c.JSON(http.StatusOK, resp.ErrResp(err))
 		return
