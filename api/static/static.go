@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/NothingXiang/online-class/common/req"
 	"github.com/NothingXiang/online-class/common/resp"
 	"github.com/NothingXiang/online-class/config"
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -50,17 +53,13 @@ func UploadSingleFile(c *gin.Context) {
 		return
 	}
 
-	// 2. get file message,include file type and file id
+	// 2. get file message
 	fileType, suc := req.TryGetParam("type", c)
 	if !suc || !CheckFileType(fileType) {
 		resp.ErrJson(c, resp.ParamEmptyErr.NewErrStr("type param"))
 		return
 	}
-	id, ok := req.TryGetParam("id", c)
-	if !ok {
-		resp.ErrJson(c, resp.ParamEmptyErr.NewErrStr("id param "))
-		return
-	}
+	id := uuid.NewV4().String()
 
 	//3. get dir ,make sure dir exist
 	dir := fmt.Sprintf("%v/%v/%v",
@@ -70,51 +69,63 @@ func UploadSingleFile(c *gin.Context) {
 	os.MkdirAll(dir, os.ModeDir)
 
 	// 4. save file
-	err = c.SaveUploadedFile(file,
-		fmt.Sprintf("%v/%v", dir, filepath.Base(file.Filename)))
+
+	dst := fmt.Sprintf("%v/%v", dir, filepath.Base(file.Filename))
+	err = c.SaveUploadedFile(file, dst)
 	if err != nil {
 		resp.ErrJson(c, resp.UploadFileError.NewErr(err))
 		return
 	}
 
-	resp.SucJson(c, nil)
+	resp.SucJson(c, dst)
 
 }
 
 func UploadMutiFile(c *gin.Context) {
-	// 1. get file data
+	/*1. get file data*/
 	form, _ := c.MultipartForm()
 
 	files := form.File["files"]
 
-	// 2. get file message,include file type and file id
-	id, ok := req.TryGetParam("id", c)
-	if !ok {
-		resp.ErrJson(c, resp.ParamEmptyErr.NewErrStr("id param "))
-		return
-	}
+	/*2. get file type*/
 	fileType, suc := req.TryGetParam("type", c)
 	if !suc || !CheckFileType(fileType) {
 		resp.ErrJson(c, resp.ParamEmptyErr.NewErrStr("type param"))
 		return
 	}
 
-	//3. get dir ,make sure dir exist
-	dir := fmt.Sprintf("%v/%v/%v",
-		config.GetDeStr("dir.base", "./static"),
+	/*3. generate baseDir ,make sure baseDir exist*/
+	id := uuid.NewV4().String()
+	baseDir := fmt.Sprintf("%v/%v/%v",
+		config.GetDeStr("baseDir.base", "./static"),
 		fileType,
 		id)
-	os.MkdirAll(dir, os.ModeDir)
+	os.MkdirAll(baseDir, os.ModeDir)
 
-	// 4. save all file
-	for _, file := range files {
-		err := c.SaveUploadedFile(file,
-			fmt.Sprintf("%v/%v", dir, filepath.Base(file.Filename)))
-		if err != nil {
-			resp.ErrJson(c, resp.UploadFileError.NewErr(err))
-			return
-		}
+	/* 4. save all file by goroutines*/
+	paths := make([]string, len(files))
 
+	// make sure goroutines finish
+	var wg sync.WaitGroup
+	wg.Add(len(files))
+
+	// save file
+	for index, file := range files {
+
+		paths[index] = fmt.Sprintf("%v/%v", baseDir, filepath.Base(file.Filename))
+
+		//
+		go func(dst string) {
+			err := c.SaveUploadedFile(file, dst)
+			if err != nil {
+				logrus.Error(err)
+			}
+			wg.Done()
+		}(paths[index])
 	}
-	resp.SucJson(c, nil)
+
+	wg.Wait()
+
+	// response file paths
+	resp.SucJson(c, paths)
 }
