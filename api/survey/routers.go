@@ -16,7 +16,7 @@ func RegisterRoutes(e *gin.Engine) {
 		// 分页获取班级问卷
 		survey.GET("/list", ListSurvey)
 
-		// 删除某分问卷
+		// 删除问卷
 		survey.DELETE("/delete", DeleteSurvey)
 
 		answer := survey.Group("/answer")

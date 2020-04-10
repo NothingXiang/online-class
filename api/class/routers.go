@@ -1,6 +1,7 @@
 package class
 
 import (
+	"github.com/NothingXiang/online-class/middle"
 	"github.com/gin-gonic/gin"
 )
 
@@ -8,7 +9,7 @@ func RegisterRouters(e *gin.Engine) {
 	class := e.Group("/class")
 	{
 		// 创建班级
-		class.POST("/create", CreateClass)
+		class.POST("/create", middle.ValidateTeacher, CreateClass)
 
 		// 通过userID获取班级
 		class.GET("/get", GetClassesByUser)
