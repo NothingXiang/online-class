@@ -10,6 +10,10 @@ type CoursewareServiceImpl struct {
 	CoursewareStore store.CoursewareStore
 }
 
+func NewCoursewareServiceImpl() *CoursewareServiceImpl {
+	return &CoursewareServiceImpl{CoursewareStore: &store.CoursewareMgoStore{}}
+}
+
 func (cs *CoursewareServiceImpl) CreateCourseware(c *courseware.CoursewareInfo) error {
 
 	c.ID = uuid.NewV4().String()

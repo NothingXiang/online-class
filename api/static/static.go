@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/NothingXiang/online-class/common/req"
@@ -12,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -35,53 +37,15 @@ func ServeStatic(e *gin.Engine) {
 	static := e.Group("/static")
 	{
 		// 上传文件
-		static.POST("/upload/single", UploadSingleFile)
-
-		static.POST("/upload/multi", UploadMutiFile)
+		static.POST("/upload", UploadFiles)
 	}
 
-	static.Static("/get", config.GetDeStr("dir.base", BasePath))
+	e.Static(viper.GetString("file.path"), config.GetDeStr("dir.base", BasePath))
 
 }
 
-// 上传单个文件
-func UploadSingleFile(c *gin.Context) {
-	// 1. get file data
-	file, err := c.FormFile("file")
-	if err != nil {
-		resp.ErrJson(c, resp.ParamEmptyErr.NewErr(err))
-		return
-	}
-
-	// 2. get file message
-	fileType, suc := req.TryGetParam("type", c)
-	if !suc || !CheckFileType(fileType) {
-		resp.ErrJson(c, resp.ParamEmptyErr.NewErrStr("type param"))
-		return
-	}
-	id := uuid.NewV4().String()
-
-	//3. get dir ,make sure dir exist
-	dir := fmt.Sprintf("%v/%v/%v",
-		config.GetDeStr("dir.base", "./static"),
-		fileType,
-		id)
-	os.MkdirAll(dir, os.ModeDir)
-
-	// 4. save file
-
-	dst := fmt.Sprintf("%v/%v", dir, filepath.Base(file.Filename))
-	err = c.SaveUploadedFile(file, dst)
-	if err != nil {
-		resp.ErrJson(c, resp.UploadFileError.NewErr(err))
-		return
-	}
-
-	resp.SucJson(c, dst)
-
-}
-
-func UploadMutiFile(c *gin.Context) {
+// 上传文件
+func UploadFiles(c *gin.Context) {
 	/*1. get file data*/
 	form, _ := c.MultipartForm()
 
@@ -102,8 +66,9 @@ func UploadMutiFile(c *gin.Context) {
 		id)
 	os.MkdirAll(baseDir, os.ModeDir)
 
-	/* 4. save all file by goroutines*/
-	paths := make([]string, len(files))
+	/* 4. save all file by goroutines ,and return the path finally*/
+
+	accessPaths := make([]string, len(files))
 
 	// make sure goroutines finish
 	var wg sync.WaitGroup
@@ -112,20 +77,28 @@ func UploadMutiFile(c *gin.Context) {
 	// save file
 	for index, file := range files {
 
-		paths[index] = fmt.Sprintf("%v/%v", baseDir, filepath.Base(file.Filename))
+		// local path
+		localPath := fmt.Sprintf("%v/%v", baseDir, filepath.Base(file.Filename))
 
-		//
+		// outside access path
+		accessPaths[index] = strings.ReplaceAll(localPath,
+			config.GetDeStr("baseDir.base", "./static"),
+			fmt.Sprintf("%v%v", viper.GetString("file.addr"), viper.GetString("file.path")),
+		)
+
+		// save file by goroutines
 		go func(dst string) {
 			err := c.SaveUploadedFile(file, dst)
 			if err != nil {
 				logrus.Error(err)
 			}
 			wg.Done()
-		}(paths[index])
+		}(localPath)
+
 	}
 
 	wg.Wait()
 
-	// response file paths
-	resp.SucJson(c, paths)
+	// response file accessPaths
+	resp.SucJson(c, accessPaths)
 }

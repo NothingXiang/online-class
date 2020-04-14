@@ -14,6 +14,7 @@ var (
 
 func init() {
 	//	todo： init service
+	coursewareService = service.NewCoursewareServiceImpl()
 }
 
 func CreateCourseware(c *gin.Context) {
