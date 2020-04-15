@@ -2,7 +2,7 @@ package resp
 
 var (
 	// 这个不是error,这个是正确返回结果
-	NoError = newAPIError(20000, "")
+	NoError = newAPIError(200, "success")
 
 	UnknownError    = newAPIError(10001, "unknown error")
 	NotExistError   = newAPIError(10002, "not exist")
@@ -11,6 +11,16 @@ var (
 	ParamEmptyErr   = newAPIError(10005, "param empty error")
 	RepeatError     = newAPIError(10006, "repeat error")
 
+	DBError = newAPIError(10007, "db error")
+
+	OutDoorError = newAPIError(10008, "other system error")
+
+	ForbiddenError = newAPIError(10009, "forbidden operation")
+
+	UploadFileError = newAPIError(10010, "upload file failed")
+
+	WeChatError = newAPIError(10011, "we chat error")
+
 	NotAuthError    = newAPIError(40001, "User authentication failed")
 	TooManyReqError = newAPIError(40029, "too many request, has been limit")
 
@@ -18,9 +28,6 @@ var (
 )
 
 var (
-	// 正确返回的结果
-	Suc = NewAPIResp(nil, NoError)
-
 	Unknown      = NewAPIResp(nil, UnknownError)
 	NotExist     = NewAPIResp(nil, NotExistError)
 	InvalidParam = NewAPIResp(nil, InvalidParamErr)
