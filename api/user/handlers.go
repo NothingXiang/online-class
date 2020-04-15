@@ -1,18 +1,13 @@
 package user
 
 import (
-	"encoding/base64"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/NothingXiang/online-class/common/req"
 	"github.com/NothingXiang/online-class/common/resp"
 	"github.com/NothingXiang/online-class/common/utils"
-	"github.com/NothingXiang/online-class/config"
-	user2 "github.com/NothingXiang/online-class/user"
+	"github.com/NothingXiang/online-class/user"
 	"github.com/NothingXiang/online-class/user/services"
 	"github.com/NothingXiang/online-class/user/store"
 	"github.com/gin-gonic/gin"
@@ -51,7 +46,7 @@ func LoginByWeChatCode(c *gin.Context) {
 func CreateByWeChat(c *gin.Context) {
 
 	// 1. get param
-	var dto user2.WeChatCrateDto
+	var dto user.WeChatCrateDto
 	if err := c.Bind(&dto); err != nil {
 		resp.ErrJson(c, resp.ParamFmtErr)
 		return
@@ -79,7 +74,7 @@ func CreateByWeChat(c *gin.Context) {
 
 // 通过手机号和密码登录
 func LoginByPhonePwd(c *gin.Context) {
-	var user user2.User
+	var user user.User
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusOK, resp.ParamFmtErr)
 		return
@@ -108,7 +103,7 @@ func LoginByPhonePwd(c *gin.Context) {
 // 通过手机号和密码来创建
 func CreateUserByPhonePwd(c *gin.Context) {
 
-	var user user2.User
+	var user user.User
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusOK, resp.ParamFmtErr.NewErr(err))
 		return
@@ -139,75 +134,23 @@ func CreateUserByPhonePwd(c *gin.Context) {
 	c.JSON(http.StatusOK, resp.NewSucResp(user))
 }
 
-// 上传用户头像
-func UploadAvatar(c *gin.Context) {
+func UpdateUser(c *gin.Context) {
+	var u user.User
 
-	id := c.PostForm("id")
-	pwd := c.PostForm("pwd")
-	if id == "" || pwd == "" {
-		c.JSON(http.StatusOK,
-			resp.ErrResp(resp.ParamEmptyErr))
+	if err := c.BindJSON(&u); err != nil {
+		resp.Json(c, resp.InvalidParamErr)
 		return
 	}
 
-	/*	if err := us.CheckUserIdAndPwd(id, pwd); err != nil {
-		log.Println(err)
-		c.JSON(http.StatusOK, resp.ErrResp(err))
-		return
-	}*/
-
-	file, err := c.FormFile("uploadAvatar")
-	if err != nil {
-		c.JSON(http.StatusOK, resp.UnknownError.NewErr(err))
+	if !req.CheckEmpty(c, u.ID) {
 		return
 	}
 
-	dir := fmt.Sprintf("%v/%v",
-		config.GetDeStr("dir.avatar", "./avatar"),
-		id)
+	if err := us.UpdateUser(&u); err != nil {
 
-	// 创建目录并且保存文件
-	os.MkdirAll(dir, os.ModeDir)
-	if e := c.SaveUploadedFile(file, dir+"/avatar.jpg"); e != nil {
-		c.JSON(http.StatusOK,
-			resp.UnknownError.NewErr(e))
+		resp.ErrJson(c, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, resp.NewSucResp(nil))
-
-}
-
-// 获取用户头像
-func GetAvatar(c *gin.Context) {
-
-	id := c.Query("id")
-	pwd := c.Query("pwd")
-	if id == "" || pwd == "" {
-		c.JSON(http.StatusOK,
-			resp.ErrResp(resp.ParamEmptyErr))
-		return
-	}
-
-	if err := us.CheckUserIdAndPwd(id, pwd); err != nil {
-		log.Println(err)
-		c.JSON(http.StatusOK, resp.ErrResp(err))
-		return
-	}
-
-	// 获取图片
-	dir := fmt.Sprintf("%v/%v/%v",
-		config.GetDeStr("dir.avatar", "./avatar"),
-		id, "avatar.jpg")
-
-	file, e := ioutil.ReadFile(dir)
-	if e != nil {
-		c.JSON(http.StatusOK, resp.NotExist.SetMessage(e))
-		return
-
-	}
-	src := base64.StdEncoding.EncodeToString(file)
-
-	c.JSON(http.StatusOK, resp.NewSucResp(src))
-
+	resp.SucJson(c, &u)
 }

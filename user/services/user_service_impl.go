@@ -17,6 +17,12 @@ type UserServiceImpl struct {
 	Store store.UserStore
 }
 
+func (u *UserServiceImpl) UpdateUser(user *user.User) error {
+
+	return u.Store.UpdateUser(user)
+
+}
+
 func (u *UserServiceImpl) CreateByWeChat(dto *user.WeChatCrateDto) error {
 
 	// 1. 用code向微信后台换取openid

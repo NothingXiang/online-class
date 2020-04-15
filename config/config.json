@@ -18,11 +18,19 @@
     "pwd": "",
     "db": 0
   },
-  "avatar.dir": "./",
+  "dir": {
+    "base": "./static",
+    "avatar": "./static/avatar/",
+    "courseware": "./static/courseware/"
+  },
   "email": {
     "addr": "smtp.qq.com",
     "account": "wei_class@foxmail.com",
     "port": 587,
     "pwd": "okuxjmiogmjwebfg"
+  },
+  "file": {
+    "addr": "localhost:8080",
+    "path": "/static/get"
   }
 }

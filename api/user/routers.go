@@ -22,15 +22,10 @@ func RegisterRoutes(e *gin.Engine) {
 		// 通过WeChat 创建账号，注意，检查该微信账号是否存在(openID)
 		user.POST("/create/wechat", CreateByWeChat)
 
-		user.POST("/register/wechat", RegisterByWeChat)
+		user.POST("/update", UpdateUser)
 
 		//	注销用户
 		//user.DELETE(":userid", Logout)
 
 	}
-}
-
-// todo:unfinished
-func RegisterByWeChat(c *gin.Context) {
-
 }

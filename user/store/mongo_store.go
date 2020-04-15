@@ -1,6 +1,8 @@
 package store
 
 import (
+	"time"
+
 	"github.com/NothingXiang/online-class/common/dbutil"
 	"github.com/NothingXiang/online-class/user"
 	"gopkg.in/mgo.v2/bson"
@@ -20,7 +22,7 @@ func (u *UserMgoStore) FindUserByOpenID(openID string) (*user.User, error) {
 	var user user.User
 	err := dbutil.MongoColl(UserClct).Find(find).One(&user)
 
-	if err != nil  {
+	if err != nil {
 		return nil, err
 	}
 
@@ -68,11 +70,20 @@ func (u *UserMgoStore) DeleteUser(id string) error {
 func (u *UserMgoStore) UpdateUser(user *user.User) error {
 
 	upd := bson.M{
-		"name":  user.Name,
-		"phone": user.Phone,
+		"update_time": time.Now(),
 	}
 
-	if err := dbutil.MongoColl(UserClct).UpdateId(user.ID, upd); err != nil {
+	if user.Name != "" {
+		upd["name"] = user.Name
+	}
+	if user.Phone != "" {
+		upd["phone"] = user.Phone
+	}
+	if user.Email != "" {
+		upd["email"] = user.Email
+	}
+
+	if err := dbutil.MongoColl(UserClct).UpdateId(user.ID, bson.M{"$set": upd}); err != nil {
 		return err
 	}
 

@@ -22,4 +22,6 @@ type UserService interface {
 
 	// 通过微信创建账号
 	CreateByWeChat(dto *user.WeChatCrateDto) error
+
+	UpdateUser(u *user.User) error
 }
