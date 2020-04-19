@@ -152,5 +152,5 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	resp.SucJson(c, &u)
+	resp.SucJson(c, nil)
 }
