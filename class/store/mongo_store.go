@@ -15,6 +15,27 @@ const (
 type ClassMgoStore struct {
 }
 
+func (c *ClassMgoStore) GetTeacher(userID, classID string) (t *class.Teacher, err error) {
+
+	finder := bson.M{
+		"user_id":  userID,
+		"class_id": classID,
+	}
+
+	err = dbutil.MongoColl(TeacherClct).Find(finder).One(&t)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
+}
+
+func (c *ClassMgoStore) UpdateSubject(classID, teacherID string, s []class.Subject) error {
+
+	return dbutil.MongoColl(TeacherClct).UpdateId(teacherID, bson.M{"$set": bson.M{"subjects": s}})
+}
+
 func (c *ClassMgoStore) CreateClass(class *class.Class) error {
 
 	return dbutil.MgoDB().C(ClassClct).Insert(class)

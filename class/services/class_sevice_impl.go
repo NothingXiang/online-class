@@ -14,6 +14,20 @@ type ClassServiceImpl struct {
 	us store2.UserStore
 }
 
+func (c *ClassServiceImpl) UpdateSubject(classID string, TeacherID string, subjects []class.Subject) error {
+	return c.cs.UpdateSubject(classID, TeacherID, subjects)
+}
+
+func (c *ClassServiceImpl) GetTeacher(userID string, ClassID string) (*class.Teacher, error) {
+
+	//todo: finish it
+	return c.cs.GetTeacher(userID, ClassID)
+}
+
+func (c *ClassServiceImpl) GetStudent(userID string, ClassID string) (*class.Student, error) {
+	panic("implement me")
+}
+
 func NewClassServiceImpl() *ClassServiceImpl {
 	return &ClassServiceImpl{
 		cs: &store.ClassMgoStore{},
@@ -115,9 +129,6 @@ func (c *ClassServiceImpl) AddTeacher(dto *class.AddTeacherDto) error {
 
 	//todo: 校验一下教师身份
 	// todo: 检查是否已经重复
-
-
-
 
 	dto.ID = uuid.NewV4().String()
 

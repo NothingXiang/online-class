@@ -36,13 +36,16 @@ func RegisterRouters(e *gin.Engine) {
 			teacher.GET("/lists", ListTeacher)
 
 			// 获取教师信息
-			//teacher.GET("/get", GetTeacher)
+			teacher.GET("/get", GetTeacher)
 
 			//	增加该名老师教授的科目
 			teacher.POST("/subject", AddSubject)
 
 			// 减少该名老师教授的科目
 			teacher.DELETE("/subject", DeleteSubject)
+
+			// 更新所教授的科目
+			teacher.POST("/subject/update", UpdateSubject)
 
 		}
 	}

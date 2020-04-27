@@ -37,4 +37,12 @@ type ClassService interface {
 	RemoveSubject(classID string, TeacherID string, s class.Subject) error
 
 	AddSubject(classID string, TeacherID string, subject class.Subject) error
+
+	UpdateSubject(classID string, TeacherID string, subject []class.Subject) error
+
+	// 通过用户id和班级id获取教师信息
+	GetTeacher(userID string, ClassID string) (*class.Teacher, error)
+
+	// 通过用户id和班级id获取教师信息
+	GetStudent(userID string, ClassID string) (*class.Student, error)
 }

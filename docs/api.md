@@ -8,7 +8,7 @@
 
 
 
-## 用户(手机号)注册 POST  /create
+## 用户(手机号)注册 POST  /dto
 
 ### 入参
 
@@ -87,7 +87,7 @@
 
 
 
-## 创建班级 POST /create
+## 创建班级 POST /dto
 
 ### 入参
 

@@ -1,6 +1,8 @@
 package class
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/NothingXiang/online-class/class"
@@ -101,22 +103,27 @@ func ListStudentPageable(c *gin.Context) {
 	resp.Json(c, resp.NewSucResp(ts))
 }
 
-/*
 func GetTeacher(c *gin.Context) {
-	uid, ok := req.TryGetParam("user_id", c)
+	uid, ok := req.TryGetParam("uid", c)
 	if !ok {
 		resp.Json(c, resp.ParamEmptyErr)
 		return
 	}
 
-	t, err := cs.GetTeacher(uid)
+	cid, ok2 := req.TryGetParam("cid", c)
+	if !ok2 {
+		resp.Json(c, resp.ParamEmptyErr)
+		return
+	}
+
+	t, err := cs.GetTeacher(uid, cid)
 	if err != nil {
 		resp.Json(c, resp.ErrResp(err))
 		return
 	}
 
 	resp.Json(c, resp.NewSucResp(t))
-}*/
+}
 
 func GetStudent(c *gin.Context) {
 
@@ -224,4 +231,52 @@ func AddSubject(c *gin.Context) {
 	}
 
 	resp.Json(c, resp.NewSucResp(s))
+}
+
+func UpdateSubject(c *gin.Context) {
+
+	var cid, tid string
+	var flag bool
+
+	//cid, flag = req.TryGetParam("cid", c)
+	//if !flag {
+	//	resp.Json(c, resp.ParamEmptyErr)
+	//	return
+	//}
+	tid, flag = req.TryGetParam("tid", c)
+	if !flag {
+		resp.Json(c, resp.ParamEmptyErr)
+		return
+	}
+
+	res := c.Query("subjects")
+	fmt.Println(res)
+
+	var sub []class.Subject
+
+	if err := json.Unmarshal([]byte(res), &sub); err != nil {
+		resp.ErrJson(c, resp.ParamFmtErr)
+		return
+	}
+
+	for _, s := range sub {
+		if !class.CheckSubject(s) {
+			resp.Json(c, resp.ParamFmtErr)
+			return
+		}
+	}
+
+	err := cs.UpdateSubject(cid, tid, sub)
+
+	if err != nil {
+		resp.ErrJson(c, err)
+		return
+	}
+
+	resp.SucJson(c, nil)
+
+}
+
+type subs struct {
+	Subjects []class.Subject
 }
