@@ -12,6 +12,8 @@ func RegisterRouters(e *gin.Engine) {
 		// 添加某条通知的已读列表
 		notice.POST("/add/read", AddNoticeRead)
 
+		notice.GET("/get/read", GetReadList)
+
 		notice.POST("/create", CreateNotice)
 
 		notice.POST("/update", UpdateNotice)

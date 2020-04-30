@@ -125,7 +125,9 @@ func (u *UserServiceImpl) Logout() error {
 	panic("implement me")
 }
 
-func (u *UserServiceImpl) FindUser(id string) (*user.User, error) {
-	panic("implement me")
-}
+
 */
+
+func (u *UserServiceImpl) FindUser(id string) (*user.User, error) {
+	return u.Store.FindUser(id)
+}

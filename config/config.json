@@ -21,7 +21,9 @@
   "dir": {
     "base": "./static",
     "avatar": "./static/avatar/",
-    "courseware": "./static/courseware/"
+    "courseware": "./static/courseware/",
+    "homework": "./static/homework",
+    "notice": "./static/notice"
   },
   "email": {
     "addr": "smtp.qq.com",

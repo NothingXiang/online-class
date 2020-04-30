@@ -72,6 +72,22 @@ func CreateByWeChat(c *gin.Context) {
 
 }
 
+func GetUser(c *gin.Context) {
+	uid, suc := req.TryGetParam("id", c)
+	if !suc {
+		resp.ErrJson(c, resp.ParamEmptyErr)
+		return
+	}
+
+	user, err := us.FindUser(uid)
+
+	if err != nil {
+		resp.ErrJson(c, err)
+	}
+
+	resp.SucJson(c, user)
+}
+
 // 通过手机号和密码登录
 func LoginByPhonePwd(c *gin.Context) {
 	var user user.User

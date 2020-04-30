@@ -24,12 +24,14 @@ const (
 
 	Courseware = "courseware"
 
+	Notice = "notice"
+
 	//	文件存储基本目录
 	BasePath = "./static"
 )
 
 func CheckFileType(t string) bool {
-	return t == Avatar || t == Homework || t == Courseware
+	return t == Avatar || t == Homework || t == Courseware || t == Notice
 }
 
 func ServeStatic(e *gin.Engine) {
@@ -83,7 +85,7 @@ func UploadFiles(c *gin.Context) {
 		// outside access path
 		accessPaths[index] = strings.ReplaceAll(localPath,
 			config.GetDeStr("baseDir.base", "./static"),
-			fmt.Sprintf("%v%v", viper.GetString("file.addr"), viper.GetString("file.path")),
+			fmt.Sprintf("http://%v%v", viper.GetString("file.addr"), viper.GetString("file.path")),
 		)
 
 		// save file by goroutines

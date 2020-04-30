@@ -26,7 +26,7 @@ func TryGetParam(key string, c *gin.Context) (val string, suc bool) {
 	// 专为微信小程序的请求做的一个过程
 	if c.Request.Method == http.MethodPost && c.ContentType() == "application/json" {
 		var params map[string]string
-		c.BindJSON(params)
+		c.BindJSON(&params)
 		val, suc = params[key]
 
 		if suc {

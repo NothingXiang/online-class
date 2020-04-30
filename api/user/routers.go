@@ -24,6 +24,8 @@ func RegisterRoutes(e *gin.Engine) {
 
 		user.POST("/update", UpdateUser)
 
+		user.GET("/get",GetUser)
+
 		//	注销用户
 		//user.DELETE(":userid", Logout)
 
