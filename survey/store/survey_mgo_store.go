@@ -85,5 +85,10 @@ func (sm *SurveyMgoStore) RemoveSurvey(surveyID string) error {
 
 func (sm *SurveyMgoStore) CreateAnswer(a []*survey.AnswerSheet) error {
 
-	return dbutil.MongoColl(AnswerClct).Insert(a)
+	array := make([]interface{}, len(a))
+	for i, v := range a {
+		array[i] = v
+
+	}
+	return dbutil.MongoColl(AnswerClct).Insert(array...)
 }

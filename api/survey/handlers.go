@@ -36,14 +36,16 @@ func GetStatistics(c *gin.Context) {
 }
 
 func CreateAnswer(c *gin.Context) {
-	var ans []*survey.AnswerSheet
+	var ans struct {
+		Ans []*survey.AnswerSheet
+	}
 
 	if err := c.Bind(&ans); err != nil {
 		resp.Json(c, resp.ParamFmtErr)
 		return
 	}
 
-	err := surveyService.CreateAnswer(ans)
+	err := surveyService.CreateAnswer(ans.Ans)
 
 	if err != nil {
 		resp.Json(c, resp.ErrResp(err))

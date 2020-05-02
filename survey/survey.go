@@ -16,7 +16,7 @@ type Survey struct {
 	Title string `json:"title" bson:"title"`
 
 	// 问卷描述
-	Content string `json:"description" bson:"content"`
+	Content string `json:"content" bson:"content"`
 
 	// 题目
 	Questions []*Question `json:"questions" bson:"questions"`

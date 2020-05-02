@@ -95,6 +95,7 @@ func ListStudentPageable(c *gin.Context) {
 
 	ts, err := cs.GetStudents(cid, page, limit)
 
+
 	if err != nil {
 		resp.Json(c, resp.ErrResp(err))
 		return
