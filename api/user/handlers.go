@@ -3,10 +3,12 @@ package user
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/NothingXiang/online-class/common/req"
 	"github.com/NothingXiang/online-class/common/resp"
 	"github.com/NothingXiang/online-class/common/utils"
+	"github.com/NothingXiang/online-class/common/validate"
 	"github.com/NothingXiang/online-class/user"
 	"github.com/NothingXiang/online-class/user/services"
 	"github.com/NothingXiang/online-class/user/store"
@@ -21,6 +23,49 @@ func init() {
 	us = &services.UserServiceImpl{
 		Store: &store.UserMgoStore{},
 	}
+}
+
+func VerifyEmailCode(c *gin.Context) {
+	uid, _ := req.TryGetParam("uid", c)
+
+	email, suc := req.TryGetParam("email", c)
+	code, suc2 := req.TryGetParam("code", c)
+	if !suc || !suc2 {
+		resp.Json(c, resp.ParamEmptyErr)
+		return
+	}
+
+	if !validate.Validate(email, code) {
+		resp.ErrJson(c, resp.NotExistError)
+		return
+	}
+
+	err := us.UpdateUser(&user.User{ID: uid, Email: email})
+
+	if err != nil {
+		resp.ErrJson(c, err)
+		return
+	}
+	resp.SucJson(c, email)
+
+}
+
+func GenerateEmailCode(c *gin.Context) {
+	email, suc := req.TryGetParam("email", c)
+
+	if !suc {
+		resp.Json(c, resp.ParamEmptyErr)
+		return
+	}
+
+	err := validate.Email.GenerateCode(email, 30*time.Minute)
+
+	if err != nil {
+		resp.ErrJson(c, err)
+		return
+	}
+	resp.SucJson(c, nil)
+
 }
 
 //

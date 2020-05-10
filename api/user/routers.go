@@ -26,6 +26,13 @@ func RegisterRoutes(e *gin.Engine) {
 
 		user.GET("/get",GetUser)
 
+		// 生产绑定邮箱的验证码
+		user.GET("/email/code", GenerateEmailCode)
+
+		//校验验证码
+		user.POST("/email/verify", VerifyEmailCode)
+
+
 		//	注销用户
 		//user.DELETE(":userid", Logout)
 

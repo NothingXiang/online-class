@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	emailValidator = EmailValidator{}
+	Email = EmailValidator{}
 
 	// 不加must,不然跑不了test
 	EmailTmpl, _ = template.ParseFiles(".\\static\\template\\email.html")
