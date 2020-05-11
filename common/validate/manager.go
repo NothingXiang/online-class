@@ -14,7 +14,6 @@ import (
 	"github.com/NothingXiang/online-class/common/utils"
 )
 
-
 const (
 	VerifyKey = "Verify:%v"
 )
@@ -29,7 +28,7 @@ type Manager struct {
 func newManager() *Manager {
 	return &Manager{
 		validators: map[string]Validator{
-			"email": &emailValidator,
+			"email": &Email,
 		},
 	}
 }
@@ -57,8 +56,12 @@ func CheckValidatorExist(key string) bool {
 func Validate(key string, value string) bool {
 
 	code, err := dbutil.Redis().Get(fmt.Sprintf(VerifyKey, key)).Result()
+	if err == nil && code == value {
+		dbutil.Redis().Del(fmt.Sprintf(VerifyKey, key))
+		return true
+	}
 
-	return err == nil && code == value
+	return false
 
 }
 
@@ -69,7 +72,7 @@ func GenerateCode(key string, expire time.Duration) string {
 
 	code := utils.RandomCode(6)
 
-	dbutil.Redis().SetNX(fmt.Sprintf(VerifyKey, key), code, expire)
+	dbutil.Redis().Set(fmt.Sprintf(VerifyKey, key), code, expire)
 
 	return code
 }

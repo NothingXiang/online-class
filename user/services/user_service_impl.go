@@ -17,6 +17,10 @@ type UserServiceImpl struct {
 	Store store.UserStore
 }
 
+func (u *UserServiceImpl) LoginByEmail(email string) (*user.User, error) {
+	return u.Store.FindUserByEmail(email)
+}
+
 func (u *UserServiceImpl) UpdateUser(user *user.User) error {
 
 	return u.Store.UpdateUser(user)
@@ -125,7 +129,9 @@ func (u *UserServiceImpl) Logout() error {
 	panic("implement me")
 }
 
-func (u *UserServiceImpl) FindUser(id string) (*user.User, error) {
-	panic("implement me")
-}
+
 */
+
+func (u *UserServiceImpl) FindUser(id string) (*user.User, error) {
+	return u.Store.FindUser(id)
+}

@@ -10,9 +10,11 @@ type UserService interface {
 
 	LoginByPwd(phone string, pwd string) (*user.User, error)
 
+	LoginByEmail(email string) (*user.User, error)
+
 	//LoginById(id string, pwd string) (*user.User, error)
 
-	//FindUser(id string) (*user.User, error)
+	FindUser(id string) (*user.User, error)
 
 	// 根据id和密码检查是否存在该用户
 	CheckUserIdAndPwd(id, pwd string) error

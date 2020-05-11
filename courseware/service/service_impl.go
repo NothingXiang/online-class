@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"github.com/NothingXiang/online-class/courseware"
 	"github.com/NothingXiang/online-class/courseware/store"
 	uuid "github.com/satori/go.uuid"
@@ -17,6 +19,7 @@ func NewCoursewareServiceImpl() *CoursewareServiceImpl {
 func (cs *CoursewareServiceImpl) CreateCourseware(c *courseware.CoursewareInfo) error {
 
 	c.ID = uuid.NewV4().String()
+	c.CreateTime = time.Now()
 
 	return cs.CoursewareStore.CreateCourseware(c)
 

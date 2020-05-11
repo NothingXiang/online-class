@@ -16,7 +16,7 @@ type Survey struct {
 	Title string `json:"title" bson:"title"`
 
 	// 问卷描述
-	Description string `json:"description" bson:"description"`
+	Content string `json:"content" bson:"content"`
 
 	// 题目
 	Questions []*Question `json:"questions" bson:"questions"`
@@ -28,7 +28,7 @@ type Survey struct {
 	EndTime time.Time `json:"end_time" bson:"end_time"`
 
 	// 问卷创建人
-	CreateBy string `json:"create_by" bson:"create)by"`
+	CreateBy string `json:"create_by" bson:"create_by"`
 }
 
 // 题目

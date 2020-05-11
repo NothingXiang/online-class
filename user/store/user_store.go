@@ -29,4 +29,6 @@ type UserStore interface {
 	IsPhoneRepect(phone string) bool
 
 	FindUserByIdandPwd(id, pwd string) (*user.User, error)
+
+	FindUserByEmail(email string) (*user.User, error)
 }

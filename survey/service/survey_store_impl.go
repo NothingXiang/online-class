@@ -17,6 +17,8 @@ type SurveyServiceImpl struct {
 func (si *SurveyServiceImpl) CreateSurvey(s *survey.Survey) error {
 
 	// 1.检查 问卷所属班级 和创建人的身份
+	s.ID = uuid.NewV4().String()
+	s.CreateTime=time.Now()
 
 	// 2. 检查问题,不能为空
 	if len(s.Questions) == 0 {
@@ -60,9 +62,9 @@ func (si *SurveyServiceImpl) CreateAnswer(answers []*survey.AnswerSheet) error {
 	}
 
 	// 比较问卷的截止时间
-	if time.Now().After(s.EndTime) {
-		return resp.ForbiddenError.NewErrStr("survey is end")
-	}
+	//if time.Now().After(s.EndTime) {
+	//	return resp.ForbiddenError.NewErrStr("survey is end")
+	//}
 
 	if len(s.Questions) != len(answers) {
 		return resp.InvalidParamErr.NewErrStr("question and answer number match failed")

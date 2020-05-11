@@ -145,22 +145,17 @@ func GetReadList(c *gin.Context) {
 func AddReadList(c *gin.Context) {
 
 	workID, suc := req.TryGetParam("wid", c)
-	if !suc {
-		resp.ErrJson(c, resp.ParamEmptyErr)
-		return
-	}
+
 	userId, s := req.TryGetParam("uid", c)
-	if !s {
+	if !suc || !s {
 		resp.ErrJson(c, resp.ParamEmptyErr)
 		return
 	}
 
-	err := homeworkService.AddReadList(workID, userId)
 
-	if err != nil {
-		resp.ErrJson(c, err)
-		return
-	}
+	 homeworkService.AddReadList(workID, userId)
 
-	resp.SucJson(c, nil)
+
+
+	resp.Json(c, resp.NewSucResp(nil))
 }

@@ -8,7 +8,7 @@ type AnswerSheet struct {
 	UserID string `json:"user_id" bson:"user_id"`
 
 	// 所属问卷
-	SurveyID string `json:"survey_id"`
+	SurveyID string `json:"survey_id bson:"survey_id"`
 
 	// 所属题号
 	Sequence int `json:"Sequence" bson:"Sequence"`
