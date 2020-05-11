@@ -12,6 +12,9 @@ type ClassService interface {
 	// 根据用户id和类型获取班级
 	GetClassByUser(uid string, userType int) ([]*class.Class, error)
 
+	// 根据班级id获取班级
+	GetClassById(cid string) (*class.Class, error)
+
 	// 通过用户id获取教师
 	//GetTeacher(userID string) (class.Teacher, error)
 

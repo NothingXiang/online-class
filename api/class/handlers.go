@@ -20,6 +20,23 @@ func init() {
 	cs = services.NewClassServiceImpl()
 }
 
+func GetClassById(c *gin.Context) {
+	classId, suc := req.TryGetParam("cid", c)
+	if !suc {
+		resp.ErrJson(c, resp.ParamEmptyErr)
+		return
+	}
+
+	classData, err := cs.GetClassById(classId)
+
+	if err != nil {
+		resp.ErrJson(c, err)
+		return
+	}
+
+	resp.SucJson(c, classData)
+}
+
 func GetClassesByUser(c *gin.Context) {
 
 	uid, ok := req.TryGetParam("uid", c)
@@ -94,7 +111,6 @@ func ListStudentPageable(c *gin.Context) {
 	}
 
 	ts, err := cs.GetStudents(cid, page, limit)
-
 
 	if err != nil {
 		resp.Json(c, resp.ErrResp(err))

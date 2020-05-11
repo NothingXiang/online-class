@@ -50,6 +50,28 @@ func VerifyEmailCode(c *gin.Context) {
 
 }
 
+func LoginByEmail(c *gin.Context) {
+	email, suc := req.TryGetParam("email", c)
+	code, suc2 := req.TryGetParam("code", c)
+	if !suc || !suc2 {
+		resp.Json(c, resp.ParamEmptyErr)
+		return
+	}
+
+	if !validate.Validate(email, code) {
+		resp.ErrJson(c, resp.NotExistError)
+		return
+	}
+
+	account, err := us.LoginByEmail(email)
+	if err != nil {
+		resp.ErrJson(c, err)
+		return
+	}
+	resp.SucJson(c, account)
+
+}
+
 func GenerateEmailCode(c *gin.Context) {
 	email, suc := req.TryGetParam("email", c)
 

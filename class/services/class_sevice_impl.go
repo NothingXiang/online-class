@@ -14,6 +14,10 @@ type ClassServiceImpl struct {
 	us store2.UserStore
 }
 
+func (c *ClassServiceImpl) GetClassById(cid string) (*class.Class, error) {
+	return c.cs.FindClassByID(cid)
+}
+
 func (c *ClassServiceImpl) UpdateSubject(classID string, TeacherID string, subjects []class.Subject) error {
 	return c.cs.UpdateSubject(classID, TeacherID, subjects)
 }

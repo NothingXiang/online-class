@@ -72,7 +72,7 @@ func GenerateCode(key string, expire time.Duration) string {
 
 	code := utils.RandomCode(6)
 
-	dbutil.Redis().SetNX(fmt.Sprintf(VerifyKey, key), code, expire)
+	dbutil.Redis().Set(fmt.Sprintf(VerifyKey, key), code, expire)
 
 	return code
 }

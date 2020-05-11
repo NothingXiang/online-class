@@ -32,7 +32,7 @@
     "pwd": "okuxjmiogmjwebfg"
   },
   "file": {
-    "addr": "localhost:8080",
+    "addr": "192.168.0.103:8080",
     "path": "/static/get"
   }
 }

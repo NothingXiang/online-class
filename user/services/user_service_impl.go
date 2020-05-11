@@ -17,6 +17,10 @@ type UserServiceImpl struct {
 	Store store.UserStore
 }
 
+func (u *UserServiceImpl) LoginByEmail(email string) (*user.User, error) {
+	return u.Store.FindUserByEmail(email)
+}
+
 func (u *UserServiceImpl) UpdateUser(user *user.User) error {
 
 	return u.Store.UpdateUser(user)

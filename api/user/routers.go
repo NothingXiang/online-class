@@ -16,6 +16,8 @@ func RegisterRoutes(e *gin.Engine) {
 		// 登录
 		user.POST("/login/phone", LoginByPhonePwd)
 
+		user.GET("/login/email", LoginByEmail)
+
 		// 通过微信id登录
 		user.GET("/login/wechat", LoginByWeChatCode)
 
@@ -24,14 +26,13 @@ func RegisterRoutes(e *gin.Engine) {
 
 		user.POST("/update", UpdateUser)
 
-		user.GET("/get",GetUser)
+		user.GET("/get", GetUser)
 
 		// 生产绑定邮箱的验证码
 		user.GET("/email/code", GenerateEmailCode)
 
 		//校验验证码
-		user.POST("/email/verify", VerifyEmailCode)
-
+		user.GET("/email/verify", VerifyEmailCode)
 
 		//	注销用户
 		//user.DELETE(":userid", Logout)
